@@ -1,14 +1,14 @@
 <html>
   <head>
     {% if title %}
-    <title>{{title}} - microblog</title>
+    <title>{{title}}</title>
     {% else %}
-    <title>microblog</title>
+    <title>pokemon API</title>
     {% endif %}
-    <script src="/static/build/bundle.js"></script>
+    <script src="/static/build/bundle.js" defer></script>
   </head>
   <body>
-    <div>Pokemons: <a href="/index">Home</a></div>
+    <div class="text-xl">Pokemons: <a href="/index">Home</a></div>
     <hr>
     {% block content %}{% endblock %}
   </body>
