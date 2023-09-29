@@ -9,9 +9,9 @@ pip3 install -r requirements.txt
 
 ### Для разработки
 
-установить зависимости npm: npm install
-запустить веб сервер: python3 run
-запустить webpack-watch: npm run dev
++ установить зависимости npm: npm install
++ запустить веб сервер: python3 run.py
++ запустить webpack-watch: npm run dev
 
 ### Билд проекта
 
