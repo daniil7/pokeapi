@@ -33,14 +33,12 @@
                 <div class="flex items-center shadow p-4">
                     <img class="rounded-full w-12 h-12" src="https://media.moddb.com/images/groups/1/3/2392/cat.jpg" />
                     <div class="ml-4">
-                        <p class="text-lg text-gray-900" x-text="pokemon.name"></p>
+                        <a x-bind:href="'/pokemon/'+pokemon.name"><span class="text-lg text-gray-900" x-text="pokemon.name"></span></a>
                     </div>
                 </div>
             </template>
         </div>
     </div>
-
-
 </div>
 
 {% endblock %}
