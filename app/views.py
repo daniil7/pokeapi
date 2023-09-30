@@ -43,3 +43,14 @@ def api_certain_pokemon(pokemon_name):
         )
     except APIRequestException as e:
         return api_error_response(e.message)
+
+@app.route('/api/pokemon-sprite/<pokemon_name>')
+def api_pokemon_sprite(pokemon_name):
+    try:
+        return app.response_class(
+            response=request_pokemon(pokemon_name)['sprites']['front_default'],
+            status=200,
+            mimetype='text/plain'
+        )
+    except APIRequestException as e:
+        return api_error_response(e.message)
