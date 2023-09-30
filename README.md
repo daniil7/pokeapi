@@ -5,14 +5,21 @@
 
 ## Установка
 
-pip3 install -r requirements.txt
+$ pip3 install -r requirements.txt
 
 ### Для разработки
 
-+ установить зависимости npm: npm install
-+ запустить веб сервер: python3 run.py
-+ запустить webpack-watch: npm run dev
++ установить зависимости npm: $ npm install
++ запустить веб сервер: $ python3 run.py
++ запустить webpack-watch: $ npm run dev
 
 ### Билд проекта
 
-npm run build
+$ npm run build
+
+### Переменные среды
+
+Некоторые настройки доступны путём изменения ENV.
+
+$ cp .env.example .env <br />
+$ your-favourite-editor .env
