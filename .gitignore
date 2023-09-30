@@ -4,4 +4,6 @@
 
 node_modules/
 
-app/static/build
+app/static/build/
+
+app/cache/
