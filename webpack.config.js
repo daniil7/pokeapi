@@ -20,6 +20,12 @@ module.exports = {
                 include: path.resolve(__dirname, './app/src/css'),
                 use: ['style-loader', 'css-loader', 'postcss-loader'],
             },
+            // JavaScript
+            {
+                test: /\.js$/,
+                exclude: /node_modules/,
+                use: ['babel-loader'],
+            },
         ],
     },
     watchOptions: {
