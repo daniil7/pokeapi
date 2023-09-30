@@ -2,7 +2,9 @@ import os
 import json
 import time
 
-CACHE_EXPIRATION = 86400
+from app.settings import CONFIG
+
+CACHE_EXPIRATION = CONFIG['CACHE_EXPIRATION']
 
 def read_cache(cache_name: str):
     cache_file = 'app/cache/'+cache_name+'.json'
