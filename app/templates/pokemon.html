@@ -3,16 +3,33 @@
 
 <div class="mt-2">
 
-    <div class="container mx-auto">
-        <span class="text-lg">Имя покемона: {{ pokemon_name }}</span>
-        <hr class="my-3" />
-        <span class="text-lg">Способности</span>
-        <div class="mt-1 flex">
-        {% for ability in pokemon['abilities'] %}
-        <div class="rounded px-2 py-1 mx-2 bg-cyan-200">{{ ability['ability']['name'] }}</div>
-        {% endfor %}
+    <div class="container mx-auto grid grid-cols-4">
+        <div class="col-span-1">
+            <img class="rounded-full w-48 h-48 mx-auto" src="{{ pokemon['sprites']['front_default'] }}" />
+            <div class="text-lg text-center">{{ pokemon_name }}</div>
         </div>
-        <hr class="my-3" />
+        <div class="col-span-3">
+            <span class="text-lg">Способности</span> <div class="mt-4 flex">
+            {% for ability in pokemon['abilities'] %}
+                <div class="rounded px-2 py-1 mx-2 bg-cyan-200">{{ ability['ability']['name'] }}</div>
+            {% endfor %}
+            </div>
+            <hr class="my-4" />
+
+            <span class="text-lg">Формы</span> <div class="mt-4 flex">
+            {% for form in pokemon['forms'] %}
+                <div class="rounded px-2 py-1 mx-2 bg-cyan-200">{{ form['name'] }}</div>
+            {% endfor %}
+            </div>
+            <hr class="my-4" />
+
+            <span class="text-lg">Характеристики</span> <div class="mt-4 flex">
+            {% for stat in pokemon['stats'] %}
+                <div class="rounded px-2 py-1 mx-2 bg-cyan-200">{{ stat['stat']['name'] }} {{ stat['base_stat'] }}</div>
+            {% endfor %}
+            </div>
+            <hr class="my-4" />
+        </div>
     </div>
 
 </div>
