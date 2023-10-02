@@ -4,27 +4,11 @@
 <div class="mt-2"
     x-data="{
         pokemons: [],
-        async retrievePokemons() {
-            this.pokemons = await (await fetch('/api/pokemon')).json();
-        },
-        async retrieveSprite(pokemon_name) {
-            return await (await fetch('/api/pokemon-sprite/'+pokemon_name)).text();
-        },
-
         search: '',
-        doSearch() {
-            return this.pokemons.filter((pokemon) => {
-                return pokemon.name
-                    .replace(/ /g, '')
-                    .toLowerCase()
-                    .includes(this.search.replace(/ /g, '').toLowerCase());
-            });
-        },
-
         pagination: new Pagination(30),
     }"
     x-init="
-        await retrievePokemons();
+        pokemons = await API.retrievePokemons();
     ">
 
     <div class="container mx-auto">
@@ -33,7 +17,7 @@
         <input
             x-ref="searchInput"
             x-model="search"
-            x-on:keydown.window.prevent.slash="$refs.searchInput.focus(); doSearch()"
+            x-on:keydown.window.prevent.slash="$refs.searchInput.focus();"
             placeholder="Ищем покемона..."
             type="search"
             class="block w-full rounded bg-gray-200 p-4 mb-4"
@@ -41,10 +25,10 @@
 
         {# Pokemons list #}
         <div class="grid sm:grid-cols-2 md:grid-cols-4 gap-4">
-            <template x-for="pokemon in pagination.paginate(doSearch())"
+            <template x-for="pokemon in pagination.paginate(pokemons.filterStringFieldIncludes('name', search))"
                       :key="pokemon.name">
                 <div class="flex items-center shadow p-4">
-                    <img class="rounded-full w-12 h-12" x-bind:src="retrieveSprite(pokemon.name)" />
+                    <img class="rounded-full w-12 h-12" x-bind:src="API.retrieveSprite(pokemon.name)" />
                     <div class="ml-4">
                         <a x-bind:href="'/pokemon/'+pokemon.name"><span class="text-lg text-gray-900" x-text="pokemon.name"></span></a>
                     </div>
