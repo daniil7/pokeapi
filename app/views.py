@@ -1,5 +1,6 @@
 from flask import render_template, make_response
 from app import app
+import random
 
 from app.pokemon_api import request_pokemons, request_pokemon, APIRequestException
 import json
@@ -21,6 +22,19 @@ def pokemon(pokemon_name):
         title = 'Pokemon',
         pokemon = pokemon,
         pokemon_name = pokemon_name)
+
+@app.route('/battle/<user_pokemon_name>')
+def battle(user_pokemon_name):
+    user_pokemon = request_pokemon(user_pokemon_name)
+    enemy_pokemon_name = random.choice(request_pokemons())['name']
+    enemy_pokemon = request_pokemon(enemy_pokemon_name)
+    return render_template(
+        "battle.html",
+        title = 'Pokemon',
+        user_pokemon = user_pokemon,
+        user_pokemon_name = user_pokemon_name,
+        enemy_pokemon = enemy_pokemon,
+        enemy_pokemon_name = enemy_pokemon_name)
 
 @app.route('/api/pokemon')
 def api_pokemons():
