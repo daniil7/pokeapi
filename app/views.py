@@ -1,9 +1,13 @@
-from flask import render_template, make_response
-from app import app
 import random
-
-from app.pokemon_api import request_pokemons, request_pokemon, APIRequestException
 import json
+
+from flask import render_template, make_response, request
+from app import app
+from app.pokemon_api import request_pokemons, request_pokemon, APIRequestException
+from app.database import db_session
+from app.models import BattlesHistory
+
+
 
 def api_error_response(error_message):
     return {'error', error_message}
@@ -71,4 +75,13 @@ def api_pokemon_sprite(pokemon_name):
 
 @app.route('/api/battle/write-result', methods=['POST'])
 def api_battle_write_result():
+    score = request.json
+    battle_result = BattlesHistory(
+        score['user_pokemon']['name'],
+        score['enemy_pokemon']['name'],
+        score['user_pokemon']['score'],
+        score['enemy_pokemon']['score'],
+    )
+    db_session.add(battle_result)
+    db_session.commit()
     return '';

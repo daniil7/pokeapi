@@ -4,6 +4,7 @@ import time
 
 from app.settings import CONFIG
 
+
 CACHE_EXPIRATION = CONFIG['CACHE_EXPIRATION']
 
 def read_cache(cache_name: str):
