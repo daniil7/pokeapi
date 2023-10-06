@@ -68,3 +68,7 @@ def api_pokemon_sprite(pokemon_name):
         )
     except APIRequestException as e:
         return api_error_response(e.message)
+
+@app.route('/api/battle/write-result', methods=['POST'])
+def api_battle_write_result():
+    return '';

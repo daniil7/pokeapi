@@ -8,4 +8,13 @@ export default class API
     static async retrieveSprite(pokemon_name) {
         return await (await fetch('/api/pokemon-sprite/'+pokemon_name)).text();
     }
+    static async sendBattleResult(battle_result_array) {
+        return await fetch("/api/battle/write-result", {
+          method: "POST",
+          body: JSON.stringify(battle_result_array),
+          headers: {
+            "Content-type": "application/json; charset=UTF-8"
+          }
+        });
+    }
 }

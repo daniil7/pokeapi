@@ -10,18 +10,28 @@
         current_round: 1,
         rounds_count: 3,
         score: {
-            '{{ user_pokemon_name }}': 0,
-            '{{ enemy_pokemon_name }}': 0
+            'user_pokemon': {
+                'name': '{{ user_pokemon_name }}',
+                'score': 0,
             },
+            'enemy_pokemon': {
+                'name': '{{ enemy_pokemon_name }}',
+                'score': 0,
+            }
+        },
         get_random_int: function (min, max) {
             min = Math.ceil(min);
             max = Math.floor(max);
             return Math.floor(Math.random() * (max - min) + min);
         },
+        game_end: function () {
+            API.sendBattleResult(this.score);
+        },
         game_round: function (winner) {
-            this.score[winner] += 1;
+            this.score[winner]['score'] += 1;
             if (this.current_round == this.rounds_count) {
                 this.game_status = false;
+                this.game_end();
                 return;
             }
             this.user_pokemon_hp = this.base_hp;
@@ -37,10 +47,10 @@
                     this.user_pokemon_hp -= 1;
                 }
                 if (this.user_pokemon_hp == 0) {
-                this.game_round('{{ enemy_pokemon_name }}')
+                    this.game_round('enemy_pokemon')
                 }
                 if (this.enemy_pokemon_hp == 0) {
-                this.game_round('{{ user_pokemon_name }}')
+                    this.game_round('user_pokemon')
                 }
             }
         }
@@ -69,13 +79,13 @@
                     x-text="game_status ? 'Раунд ' + current_round : 'Битва окончена'">
                 </div>
                 <div class="mt-16 text-xl text-center"
-                     x-text="'Счёт ' + score['{{ user_pokemon_name }}'] + ':' + score['{{ enemy_pokemon_name }}']">
+                     x-text="'Счёт ' + score['user_pokemon'].score + ':' + score['enemy_pokemon'].score">
                 </div>
-                <div x-cloak x-show="!game_status && score['{{ user_pokemon_name }}'] > score['{{enemy_pokemon_name}}']"
+                <div x-cloak x-show="!game_status && score['user_pokemon'].score > score['enemy_pokemon'].score"
                      class="mt-4 text-xl text-green-700 text-center font-bold">
                     Победа!
                 </div>
-                <div x-cloak x-show="!game_status && score['{{ user_pokemon_name }}'] < score['{{enemy_pokemon_name}}']"
+                <div x-cloak x-show="!game_status && score['user_pokemon'].score < score['enemy_pokemon'].score"
                      class="mt-4 text-xl text-red-700 text-center font-bold">
                     Поражение.
                 </div>
