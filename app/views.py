@@ -52,13 +52,15 @@ def battle(user_pokemon_name):
 @app.route('/api/pokemon')
 def api_pokemons():
     try:
-        return app.response_class(
-            response=json.dumps(request_pokemons()),
-            status=200,
-            mimetype='application/json'
-        )
+        pokemons = request_pokemons()
     except APIRequestException as e:
         return api_error_response(e.message)
+
+    return app.response_class(
+        response=json.dumps(pokemons),
+        status=200,
+        mimetype='application/json'
+    )
 
 @app.route('/api/pokemon/<pokemon_name>')
 def api_certain_pokemon(pokemon_name):
