@@ -11,7 +11,7 @@ class APIRequestException(Exception):
 def request_count():
     r = requests.get(API_ROUTE+'pokemon?limit=1')
     if r.status_code != 200:
-        raise APIRequestException('could not request count of pokemons, status code: '+r.status_code)
+        raise APIRequestException('could not request count of pokemons, status code: ' + str(r.status_code))
     return r.json()['count']
 
 def request_pokemons():
@@ -23,7 +23,7 @@ def request_pokemons():
     count = request_count()
     r = requests.get(API_ROUTE+'pokemon?limit='+str(count))
     if r.status_code != 200:
-        raise APIRequestException('could not request pokemons, status code: '+r.status_code)
+        raise APIRequestException('could not request pokemons, status code: ' + str(r.status_code))
     response_data = r.json()['results']
 
     write_cache('pokemons', response_data)
@@ -38,7 +38,7 @@ def request_pokemon(pokemon_name: str):
 
     r = requests.get(API_ROUTE+'pokemon/'+pokemon_name)
     if r.status_code != 200:
-        raise APIRequestException('could not request pokemon '+pokemon_name+', status code: '+r.status_code)
+        raise APIRequestException('could not request pokemon '+pokemon_name+', status code: ' + str(r.status_code))
     response_data = r.json()
 
     write_cache('pokemon-'+pokemon_name, response_data)

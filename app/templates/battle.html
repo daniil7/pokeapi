@@ -4,9 +4,12 @@
 <div class="mt-2"
      x-data="{
         game_status: true,
-        base_hp: 5,
-        user_pokemon_hp: 5,
-        enemy_pokemon_hp: 5,
+        user_pokemon_base_hp: {{ user_pokemon_stats['hp'] }},
+        user_pokemon_hp: {{ user_pokemon_stats['hp'] }},
+        user_pokemon_attack: {{ user_pokemon_stats['attack'] }},
+        enemy_pokemon_base_hp: {{ enemy_pokemon_stats['hp'] }},
+        enemy_pokemon_hp: {{ enemy_pokemon_stats['hp'] }},
+        enemy_pokemon_attack: {{ enemy_pokemon_stats['attack'] }},
         current_round: 1,
         rounds_count: 3,
         score: {
@@ -34,22 +37,22 @@
                 this.game_end();
                 return;
             }
-            this.user_pokemon_hp = this.base_hp;
-            this.enemy_pokemon_hp = this.base_hp;
+            this.user_pokemon_hp = this.user_pokemon_base_hp;
+            this.enemy_pokemon_hp = this.enemy_pokemon_base_hp;
             this.current_round += 1;
         },
         game_iteration: function (user_choice) {
             if (this.game_status) {
                 computer_choice = this.get_random_int(1, 10);
                 if ((user_choice+computer_choice) % 2 == 0) {
-                    this.enemy_pokemon_hp -= 1;
+                    this.enemy_pokemon_hp -= this.user_pokemon_attack;
                 } else {
-                    this.user_pokemon_hp -= 1;
+                    this.user_pokemon_hp -= this.enemy_pokemon_attack;
                 }
-                if (this.user_pokemon_hp == 0) {
+                if (this.user_pokemon_hp <= 0) {
                     this.game_round('enemy_pokemon')
                 }
-                if (this.enemy_pokemon_hp == 0) {
+                if (this.enemy_pokemon_hp <= 0) {
                     this.game_round('user_pokemon')
                 }
             }
@@ -60,7 +63,8 @@
         <div class="col-span-1">
             <img class="rounded-full w-48 h-48 mx-auto" src="{{ user_pokemon['sprites']['front_default'] }}" />
             <div class="text-lg text-center">{{ user_pokemon_name }}</div>
-            <div class="text-lg text-center" x-text="user_pokemon_hp + ' HP'"></div>
+            <div class="text-lg text-center" x-text="user_pokemon_hp +  ' / ' + user_pokemon_base_hp + ' HP'"></div>
+            <div class="text-lg text-center" x-text="user_pokemon_attack + ' атака'"></div>
         </div>
         <div class="col-span-2">
             <div class="mt-8">
@@ -94,7 +98,8 @@
         <div class="col-span-1">
             <img class="rounded-full w-48 h-48 mx-auto" src="{{ enemy_pokemon['sprites']['front_default'] }}" />
             <div class="text-lg text-center">{{ enemy_pokemon_name }}</div>
-            <div class="text-lg text-center" x-text="enemy_pokemon_hp + ' HP'"></div>
+            <div class="text-lg text-center" x-text="enemy_pokemon_hp +  ' / ' + enemy_pokemon_base_hp + ' HP'"></div>
+            <div class="text-lg text-center" x-text="enemy_pokemon_attack + ' атака'"></div>
         </div>
     </div>
 
