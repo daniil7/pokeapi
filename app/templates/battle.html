@@ -56,6 +56,15 @@
                     this.game_round('user_pokemon')
                 }
             }
+        },
+        auto_fight: function () {
+
+            this.game_iteration(this.get_random_int(1, 10));
+
+            if (this.game_status) {
+                var _this = this;
+                setTimeout(function () {_this.auto_fight()}, 500);
+            }
         }
      }">
 
@@ -92,6 +101,12 @@
                 <div x-cloak x-show="!game_status && score['user_pokemon'].score < score['enemy_pokemon'].score"
                      class="mt-4 text-xl text-red-700 text-center font-bold">
                     Поражение.
+                </div>
+                <div class="mt-8 flex justify-center">
+                    <button class="block px-3 py-1.5 border-indigo-600 border-2 border-solid rounded text-indigo-600"
+                            x-on:click="auto_fight()">
+                        Быстрый бой
+                    </button>
                 </div>
             </div>
         </div>
