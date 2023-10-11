@@ -9,3 +9,4 @@ app/static/build/
 app/cache/
 
 database/
+logs/

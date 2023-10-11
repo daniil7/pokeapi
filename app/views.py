@@ -7,6 +7,7 @@ from app.pokemon_api import request_pokemons, request_pokemon, APIRequestExcepti
 from app.database import db_session
 from app.models import BattlesHistory
 
+from app.mail_service.mail_log import MailLog
 
 
 def api_error_response(error_message):
@@ -95,4 +96,13 @@ def api_battle_write_result():
     )
     db_session.add(battle_result)
     db_session.commit()
-    return '';
+    mail_service = MailLog('test@example.com')
+    mail_service.send_a_letter(
+            'user pokemon: ' +
+            str(score['user_pokemon']['name']) + ' ' +
+            str(score['user_pokemon']['score']) + '\n' +
+            'enemy pokemon: ' +
+            str(score['enemy_pokemon']['name']) + ' ' +
+            str(score['enemy_pokemon']['score'])
+    )
+    return 'success';
