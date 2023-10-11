@@ -3,6 +3,7 @@ from sqlalchemy import Column, Integer, String
 from app.database import Base
 
 
+# Модель БД для хранения истории боёв покемонов
 class BattlesHistory(Base):
     __tablename__ = 'battles_history'
     id = Column(Integer, primary_key=True)
