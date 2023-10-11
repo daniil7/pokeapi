@@ -17,7 +17,7 @@ CONFIG = {
     'MAIL_DRIVER': os.environ.get('MAIL_DRIVER', 'log'),
     'MAIL_HOST': os.environ.get('MAIL_HOST', ''),
     'MAIL_PORT': os.environ.get('MAIL_PORT', ''),
-    'MAIL_USERNAME': os.environ.get('MAIL_USERNAME', ''),
     'MAIL_PASSWORD': os.environ.get('MAIL_PASSWORD', ''),
     'MAIL_FROM_ADDRESS': os.environ.get('MAIL_FROM_ADDRESS', ''),
+    'MAIL_TO_ADDRESS': os.environ.get('MAIL_TO_ADDRESS', ''),
 }
