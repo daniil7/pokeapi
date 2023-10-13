@@ -4,11 +4,12 @@ import datetime
 
 from app.logs_service.logs_interface import LogsInterface
 
+
 LOGS_DIR = "logs"
 
-class LogsFile:
+class LogsFile(LogsInterface):
 
-    def __init__(self, log_instance):
+    def __init__(self, log_instance: str):
         self.log_instance = str(pathlib.Path(LOGS_DIR) / log_instance)
         os.makedirs(
                 os.path.dirname(self.log_instance),

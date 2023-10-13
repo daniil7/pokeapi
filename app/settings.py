@@ -5,6 +5,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 CONFIG = {
+    'TEST_MODE': os.environ.get('TEST_MODE', 'FALSE') == 'TRUE',
+
     'CACHE_EXPIRATION': int(os.environ.get('CACHE_EXPIRATION', '86400')),
 
     'DB': os.environ.get('DB', 'sqlite'),
