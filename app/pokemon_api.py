@@ -1,6 +1,6 @@
 import requests
 
-from app.cache_service import read_cache, write_cache
+import app.services_provider as services_provider
 
 
 # Константа, представляющая базовый URL для запросов к API Pokemon.
@@ -19,7 +19,8 @@ def request_count():
 
 # Функция для выполнения запроса и получения списка покемонов из API.
 def request_pokemons():
-    cache = read_cache('pokemons')
+    cache_service = services_provider.ServicesProvider.cache_service('pokemons')
+    cache = cache_service.read_cache()
     if cache is not None:
         return cache
 
@@ -29,13 +30,14 @@ def request_pokemons():
         raise APIRequestException('Could not request pokemons, status code: ' + str(r.status_code))
     response_data = r.json()['results']
 
-    write_cache('pokemons', response_data)
+    cache_service.write_cache(response_data)
 
     return response_data
 
 # Функция для выполнения запроса и получения информации о конкретном покемоне.
 def request_pokemon(pokemon_name: str):
-    cache = read_cache('pokemon-' + pokemon_name)
+    cache_service = services_provider.ServicesProvider.cache_service('pokemon-' + pokemon_name)
+    cache = cache_service.read_cache()
     if cache is not None:
         return cache
 
@@ -44,6 +46,6 @@ def request_pokemon(pokemon_name: str):
         raise APIRequestException('Could not request pokemon ' + pokemon_name + ', status code: ' + str(r.status_code))
     response_data = r.json()
 
-    write_cache('pokemonr' + pokemon_name, response_data)
+    cache_service.write_cache(response_data)
 
     return response_data

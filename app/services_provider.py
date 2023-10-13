@@ -1,6 +1,7 @@
 from app.settings import CONFIG
 from app.mail_service import mail_interface, mail_test, mail_log, mail_smtp
 from app.logs_service import logs_interface, logs_test, logs_file
+from app.cache_service import cache_interface, cache_test, cache_file
 
 
 # Класс, предоставляющий различные сервисы.
@@ -23,3 +24,9 @@ class ServicesProvider:
             return logs_test.LogsTest(log_instance)
         # Определение сервиса логирования
         return logs_file.LogsFile(log_instance)
+
+    def cache_service(cache_instance: str) -> cache_interface.CacheInterface:
+        if CONFIG['TEST_MODE']:
+            return cache_test.CacheTest(cache_instance)
+        # Определение сервиса кэширования
+        return cache_file.CacheFile(cache_instance)

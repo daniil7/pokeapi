@@ -1,7 +1,5 @@
 from abc import ABC, abstractmethod
 
-from app.settings import CONFIG
-
 
 class LogsInterface(ABC):
 
