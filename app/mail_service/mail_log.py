@@ -6,6 +6,7 @@ import app.services_provider as services_provider
 from app.mail_service.mail_interface import MailInterface
 from app.helpers import randomword
 
+
 LOG_DIR = "email"
 
 class MailLog(MailInterface):

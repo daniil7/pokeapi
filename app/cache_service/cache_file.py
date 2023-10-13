@@ -4,6 +4,7 @@ import time
 
 from app.cache_service.cache_interface import CacheInterface
 
+
 CACHE_DIRECTORY = "cache"
 
 class CacheFile(CacheInterface):

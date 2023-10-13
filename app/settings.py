@@ -7,9 +7,12 @@ load_dotenv()
 CONFIG = {
     'TEST_MODE': os.environ.get('TEST_MODE', 'FALSE') == 'TRUE',
 
+    'LOGS_DRIVER': os.environ.get('LOGS_DRIVER', 'file'),
+
+    'CACHE_DRIVER': os.environ.get('CACHE_DRIVER', 'file'),
     'CACHE_EXPIRATION': int(os.environ.get('CACHE_EXPIRATION', '86400')),
 
-    'DB': os.environ.get('DB', 'sqlite'),
+    'DB_DRIVER': os.environ.get('DB_DRIVER', 'sqlite'),
     'DB_USER': os.environ.get('DB_USER', 'admin'),
     'DB_PASSWORD': os.environ.get('DB_PASSWORD', 'admin'),
     'DB_DATABASE': os.environ.get('DB_DATABASE', 'db'),

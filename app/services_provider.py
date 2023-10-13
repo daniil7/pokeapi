@@ -23,10 +23,14 @@ class ServicesProvider:
         if CONFIG['TEST_MODE']:
             return logs_test.LogsTest(log_instance)
         # Определение сервиса логирования
-        return logs_file.LogsFile(log_instance)
+        match CONFIG['LOGS_DRIVER']:
+            case 'file':
+                return logs_file.LogsFile(log_instance)
 
     def cache_service(cache_instance: str) -> cache_interface.CacheInterface:
         if CONFIG['TEST_MODE']:
             return cache_test.CacheTest(cache_instance)
         # Определение сервиса кэширования
-        return cache_file.CacheFile(cache_instance)
+        match CONFIG['CACHE_DRIVER']:
+            case 'file':
+                return cache_file.CacheFile(cache_instance)

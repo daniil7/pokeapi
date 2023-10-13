@@ -16,7 +16,7 @@ export default class API
           method: "POST",
           body: JSON.stringify(battle_result_array),
           headers: {
-            "Content-type": "application/json; charset=UTF-8"
+              "Content-type": "application/json; charset=UTF-8"
           }
         });
     }

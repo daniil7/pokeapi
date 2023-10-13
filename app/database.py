@@ -10,7 +10,7 @@ from app.settings import CONFIG
 engine = None
 
 # Выбор типа базы данных в зависимости от значения настройки DB.
-match CONFIG['DB']:
+match CONFIG['DB_DRIVER']:
     case 'postgresql':
         # Если DB указана как 'postgresql', создается соответствующий объект Engine.
         engine = create_engine(f"postgresql+psycopg2://{CONFIG['DB_USER']}:{CONFIG['DB_PASSWORD']}@{CONFIG['DB_HOST']}:{CONFIG['DB_PORT']}/{CONFIG['DB_DATABASE']}")
