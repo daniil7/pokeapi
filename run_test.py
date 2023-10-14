@@ -34,11 +34,14 @@ print("\n-------------------------------\n")
 for module_name in test_modules:
     loader = importlib.machinery.SourceFileLoader(module_name, test_modules[module_name])
     module = loader.load_module()
+    result = False
+    message = ""
     try:
         result, message = module.Test.do()
     except Exception as e:
         print("Test " + module_name + f" {bcolors.WARNING}FAILED WITH EXCEPTION{bcolors.ENDC}")
         print(str(e))
+        continue
     if result:
         print("Test " + module_name + f" {bcolors.OKGREEN}PASSED{bcolors.ENDC}")
     else:
