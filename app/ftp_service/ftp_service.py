@@ -6,7 +6,7 @@ class FTPService(FTPInterface):
     def __init__(self):
         super().__init__()
 
-    def scandir(self, path = '/': str) -> list:
+    def scandir(self, path: str = '/') -> list:
         return []
 
     def makedir(self, path: str):

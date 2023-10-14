@@ -12,7 +12,7 @@ class FTPInterface(ABC):
         self.password = CONFIG['FTP_PASSWORD']
 
     @abstractmethod
-    def scandir(self, path = '/': str) -> list:
+    def scandir(self, path: str = '/') -> list:
         pass
 
     @abstractmethod

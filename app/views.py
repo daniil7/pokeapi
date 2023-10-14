@@ -1,5 +1,8 @@
 import random
 import json
+import datetime
+import pathlib
+import functools
 
 import app.services_provider as services_provider
 
@@ -12,9 +15,25 @@ from app.models import BattlesHistory
 from app.settings import CONFIG
 
 
-def api_error_response(error_message):
-    # Функция для создания JSON-ответа с ошибкой.
-    return {'error', error_message}
+def content_type(value: str):
+    # Декоратор проверки content-type
+    def _content_type(func):
+        @functools.wraps(func)
+        def wrapper(*args,**kwargs):
+            required_types = list(map(lambda t: t.strip(),
+                                      value.replace(" ", "").split(";")))
+            request_types  = list(map(lambda t: t.strip(),
+                                      request.headers.get("Content-Type").replace(" ", "").split(";")))
+            if not required_types == request_types:
+                print(123)
+                error_message = {
+                    'error': 'not supported Content-Type'
+                }
+                return make_response(error_message, 400)
+
+            return func(*args,**kwargs)
+        return wrapper
+    return _content_type
 
 @app.route('/')
 @app.route('/index')
@@ -63,7 +82,7 @@ def api_pokemons():
     try:
         pokemons = request_pokemons()
     except APIRequestException as e:
-        return api_error_response(e.message)
+        return make_response({'error': e.message}, 404)
 
     return app.response_class(
         response=json.dumps(pokemons),
@@ -81,7 +100,7 @@ def api_certain_pokemon(pokemon_name):
             mimetype='application/json'
         )
     except APIRequestException as e:
-        return api_error_response(e.message)
+        return make_response({'error': e.message}, 404)
 
 @app.route('/api/pokemon-sprite/<pokemon_name>')
 def api_pokemon_sprite(pokemon_name):
@@ -93,7 +112,7 @@ def api_pokemon_sprite(pokemon_name):
             mimetype='text/plain'
         )
     except APIRequestException as e:
-        return api_error_response(e.message)
+        return make_response({'error': e.message}, 404)
 
 @app.route('/api/battle/write-result', methods=['POST'])
 def api_battle_write_result():
@@ -117,3 +136,24 @@ def api_battle_write_result():
         str(score['enemy_pokemon']['score'])
     )
     return 'success'
+
+@app.route('/api/ftp/save-pokemon', methods=['POST'])
+@content_type('text/plain; charset=UTF-8')
+def api_save_pokemon_to_ftp():
+    # API-маршрут для записи информации о покемоне на внешнем ftp сервере
+    pokemon_name = request.data.decode("utf-8")
+    pokemon = request_pokemon(pokemon_name)
+    ftp_service = services_provider.ServicesProvider.ftp_service()
+    dir_name = datetime.datetime.now().strftime("%Y-%m-%d")
+    ftp_service.makedir(dir_name)
+    ftp_service.write_file(
+            pathlib.Path(dir_name) / (pokemon_name + ".md"),
+            f"# {pokemon_name} \n" +
+            "\n".join(
+                [
+                    "- " + stat['stat']['name'] + ": " + str(stat['base_stat'])
+                    for stat in pokemon['stats']
+                ]
+            )
+        )
+    return "success"
