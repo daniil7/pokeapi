@@ -9,5 +9,5 @@ class CacheTest(CacheInterface):
     def read_cache(self):
         return None
 
-    def write_cahe(self, data):
+    def write_cache(self, data):
         pass
