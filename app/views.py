@@ -1,5 +1,6 @@
 import random
 import json
+import jsonschema
 import datetime
 import pathlib
 import functools
@@ -21,11 +22,10 @@ def content_type(value: str):
         @functools.wraps(func)
         def wrapper(*args,**kwargs):
             required_types = list(map(lambda t: t.strip(),
-                                      value.replace(" ", "").split(";")))
+                                      value.replace(" ", "").lower().split(";")))
             request_types  = list(map(lambda t: t.strip(),
-                                      request.headers.get("Content-Type").replace(" ", "").split(";")))
+                                      request.headers.get("Content-Type").replace(" ", "").lower().split(";")))
             if not required_types == request_types:
-                print(123)
                 error_message = {
                     'error': 'not supported Content-Type'
                 }
@@ -102,22 +102,38 @@ def api_certain_pokemon(pokemon_name):
     except APIRequestException as e:
         return make_response({'error': e.message}, 404)
 
-@app.route('/api/pokemon-sprite/<pokemon_name>')
-def api_pokemon_sprite(pokemon_name):
-    # API-маршрут для получения спрайта покемона по его имени.
-    try:
-        return app.response_class(
-            response=request_pokemon(pokemon_name)['sprites']['front_default'],
-            status=200,
-            mimetype='text/plain'
-        )
-    except APIRequestException as e:
-        return make_response({'error': e.message}, 404)
-
 @app.route('/api/battle/write-result', methods=['POST'])
+@content_type('application/json; charset=UTF-8')
 def api_battle_write_result():
     # API-маршрут для записи результатов битвы.
+
     score = request.json
+
+    # Валидация json
+    required_schema = {
+        'type': 'object',
+        'properties': {
+            'user_pokemon': {
+                'type': 'object',
+                'properties': {
+                    'name': {'type': 'string'},
+                    'score': {'type': 'number'}
+                }
+            },
+            'enemy_pokemon': {
+                'type': 'object',
+                'properties': {
+                    'name': {'type': 'string'},
+                    'score': {'type': 'number'}
+                }
+            }
+        }
+    }
+    try:
+        jsonschema.validate(instance=score, schema=required_schema)
+    except Exception as e:
+        return make_response({'error': 'invalid json schema'}, 400)
+
     battle_result = BattlesHistory(
         score['user_pokemon']['name'],
         score['enemy_pokemon']['name'],
