@@ -1,7 +1,5 @@
 import importlib, os
 
-import sys
-import inspect
 from setuptools import find_packages
 from pkgutil import iter_modules
 
@@ -20,14 +18,14 @@ TESTS_DIR = 'tests'
 
 def find_modules(path):
     modules = {}
-    for pkg in find_packages(path):
-        pkgpath = path + '/' + pkg.replace('.', '/')
-        for _, name, ispkg in iter_modules([pkgpath]):
-            if not ispkg:
-                modules[name] = TESTS_DIR + '/' + pkg + '/' + name + '.py'
+    for _, name, ispkg in iter_modules([path]):
+        if not ispkg:
+            modules[name] = TESTS_DIR + '/' + name + '.py'
     return modules
 
 test_modules = find_modules(TESTS_DIR)
+
+print(test_modules)
 
 print("\n-------------------------------\n")
 
