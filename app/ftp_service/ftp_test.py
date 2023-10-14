@@ -6,7 +6,7 @@ class FTPTest(FTPInterface):
     def __init__(self):
         super().__init__()
 
-    def scandir(self, path: str = '/') -> list:
+    def scandir(self, path: str = './') -> list:
         return []
 
     def makedir(self, path: str):
@@ -21,7 +21,7 @@ class FTPTest(FTPInterface):
     def write_file(self, path: str, data: str):
         pass
 
-    def del_file(self, path: str, data: str):
+    def del_file(self, path: str):
         pass
 
     def rename(self, from_name: str, to_name: str):

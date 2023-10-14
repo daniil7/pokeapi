@@ -28,7 +28,7 @@ CONFIG = {
 
     'FTP_DRIVER': os.environ.get('FTP_DRIVER', 'none'),
     'FTP_HOST': os.environ.get('FTP_HOST', '127.0.0.1'),
-    'FTP_PORT': os.environ.get('FTP_PORT', '21'),
+    'FTP_PORT': int(os.environ.get('FTP_PORT', '21')),
     'FTP_USER': os.environ.get('FTP_USER', 'admin'),
     'FTP_PASSWORD': os.environ.get('FTP_PASSWORD', 'admin'),
 }

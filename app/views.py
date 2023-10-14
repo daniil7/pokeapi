@@ -14,6 +14,7 @@ from app.pokemon_api import request_pokemons, request_pokemon, APIRequestExcepti
 from app.database import db_session
 from app.models import BattlesHistory
 from app.settings import CONFIG
+from app.ftp_service.ftp_interface import FTPErrorPermException
 
 
 def content_type(value: str):
@@ -82,7 +83,7 @@ def api_pokemons():
     try:
         pokemons = request_pokemons()
     except APIRequestException as e:
-        return make_response({'error': e.message}, 404)
+        return make_response({'error': str(e)}, 404)
 
     return app.response_class(
         response=json.dumps(pokemons),
@@ -100,7 +101,7 @@ def api_certain_pokemon(pokemon_name):
             mimetype='application/json'
         )
     except APIRequestException as e:
-        return make_response({'error': e.message}, 404)
+        return make_response({'error': str(e)}, 404)
 
 @app.route('/api/battle/write-result', methods=['POST'])
 @content_type('application/json; charset=UTF-8')
@@ -151,25 +152,34 @@ def api_battle_write_result():
         str(score['enemy_pokemon']['name']) + ' ' +
         str(score['enemy_pokemon']['score'])
     )
+
     return 'success'
 
 @app.route('/api/ftp/save-pokemon', methods=['POST'])
 @content_type('text/plain; charset=UTF-8')
 def api_save_pokemon_to_ftp():
     # API-маршрут для записи информации о покемоне на внешнем ftp сервере
+
     pokemon_name = request.data.decode("utf-8")
     pokemon = request_pokemon(pokemon_name)
     ftp_service = services_provider.ServicesProvider.ftp_service()
     dir_name = datetime.datetime.now().strftime("%Y-%m-%d")
-    ftp_service.makedir(dir_name)
-    ftp_service.write_file(
-            pathlib.Path(dir_name) / (pokemon_name + ".md"),
-            f"# {pokemon_name} \n" +
-            "\n".join(
-                [
-                    "- " + stat['stat']['name'] + ": " + str(stat['base_stat'])
-                    for stat in pokemon['stats']
-                ]
+    try:
+        ftp_service.makedir(dir_name)
+    except FTPErrorPermException as e:
+        pass
+    try:
+        ftp_service.write_file(
+                str(pathlib.Path(dir_name) / (pokemon_name + ".md")),
+                f"# {pokemon_name} \n" +
+                "\n".join(
+                    [
+                        "- " + stat['stat']['name'] + ": " + str(stat['base_stat'])
+                        for stat in pokemon['stats']
+                    ]
+                )
             )
-        )
+    except FTPErrorPermException as e:
+        return make_response({'error': str(e)}, 400)
+
     return "success"

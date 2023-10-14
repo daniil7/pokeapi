@@ -3,6 +3,9 @@ from abc import ABC, abstractmethod
 from app.settings import CONFIG
 
 
+class FTPErrorPermException(Exception):
+    pass
+
 class FTPInterface(ABC):
 
     def __init__(self):
@@ -12,7 +15,7 @@ class FTPInterface(ABC):
         self.password = CONFIG['FTP_PASSWORD']
 
     @abstractmethod
-    def scandir(self, path: str = '/') -> list:
+    def scandir(self, path: str = './') -> list:
         pass
 
     @abstractmethod
@@ -32,7 +35,7 @@ class FTPInterface(ABC):
         pass
 
     @abstractmethod
-    def del_file(self, path: str, data: str):
+    def del_file(self, path: str):
         pass
 
     @abstractmethod
