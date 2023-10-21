@@ -3,6 +3,7 @@
 **/*.pyc
 node_modules/
 app/static/build/
+app/static/storage/
 database/
 logs/
 cache/

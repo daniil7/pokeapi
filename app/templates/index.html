@@ -31,7 +31,7 @@
                      x-init="pokemon_data = await API.retrievePokemon(pokemon.name)"
                      class="shadow p-4">
                     <div class="flex items-center justify-center">
-                        <img class="rounded-full w-12 h-12" x-bind:src="pokemon_data.sprites.front_default" />
+                        <img class="rounded-full w-12 h-12" x-bind:src="'/static/storage/images/sprites/'+pokemon.name+'.png'" />
                         <div class="ml-4">
                             <a x-bind:href="'/pokemon/'+pokemon.name"><span class="text-lg text-gray-900" x-text="pokemon.name"></span></a>
                         </div>
