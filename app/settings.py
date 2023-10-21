@@ -11,6 +11,8 @@ CONFIG = {
 
     'CACHE_DRIVER': os.environ.get('CACHE_DRIVER', 'file'),
     'CACHE_EXPIRATION': int(os.environ.get('CACHE_EXPIRATION', '86400')),
+    'CACHE_REDIS_HOST': os.environ.get('CACHE_REDIS_HOST', 'localhost'),
+    'CACHE_REDIS_PORT': int(os.environ.get('CACHE_REDIS_PORT', '6379')),
 
     'DB_DRIVER': os.environ.get('DB_DRIVER', 'sqlite'),
     'DB_USER': os.environ.get('DB_USER', 'admin'),
