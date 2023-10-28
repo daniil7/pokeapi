@@ -23,3 +23,8 @@ $ npm run build
 
 $ cp .env.example .env <br />
 $ your-favourite-editor .env
+
+## Docker
+
+$ make build
+$ docker compose --env-file .env.production up -d
