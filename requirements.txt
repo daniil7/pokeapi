@@ -5,3 +5,5 @@ gunicorn
 SQLAlchemy
 psycopg2
 jsonschema
+redis
+hiredis
