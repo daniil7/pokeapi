@@ -26,5 +26,5 @@ $ your-favourite-editor .env
 
 ## Docker
 
-$ make build
+$ make build <br />
 $ docker compose --env-file .env.production up -d
