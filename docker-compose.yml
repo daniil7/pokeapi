@@ -1,7 +1,7 @@
 version: '3.8'
 services:
     app:
-        image: pokeapi-app
+        image: danil7/pokeapi
         container_name: pokeapi-app
         restart: unless-stopped
         env_file:
