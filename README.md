@@ -26,5 +26,7 @@ $ your-favourite-editor .env
 
 ## Docker
 
+[Образ на Dockerhub](https://hub.docker.com/repository/docker/danil7/pokeapi/general)
+
 $ make build <br />
 $ docker compose --env-file .env.production up -d
