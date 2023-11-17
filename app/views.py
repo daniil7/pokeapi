@@ -77,6 +77,11 @@ def battle(user_pokemon_name):
         enemy_pokemon_stats=enemy_pokemon_stats
     )
 
+#
+#
+# API BLOCK
+#
+
 @app.route('/api/pokemon')
 def api_pokemons():
     # API-маршрут для получения списка покемонов.
@@ -119,21 +124,24 @@ def api_battle_write_result():
                 'properties': {
                     'name': {'type': 'string'},
                     'score': {'type': 'number'}
-                }
+                },
+                "required": ["name", "score"]
             },
             'enemy_pokemon': {
                 'type': 'object',
                 'properties': {
                     'name': {'type': 'string'},
                     'score': {'type': 'number'}
-                }
+                },
+                "required": ["name", "score"]
             }
-        }
+        },
+        "required": ["user_pokemon", "enemy_pokemon"]
     }
     try:
-        jsonschema.validate(instance=score, schema=required_schema)
+        jsonschema.validate(instance=request.json, schema=required_schema)
     except Exception as e:
-        return make_response({'error': 'invalid json schema'}, 400)
+        return make_response({'error': 'invalid json schema', 'test': score}, 400)
 
     battle_result = BattlesHistory(
         score['user_pokemon']['name'],
@@ -161,7 +169,10 @@ def api_save_pokemon_to_ftp():
     # API-маршрут для записи информации о покемоне на внешнем ftp сервере
 
     pokemon_name = request.data.decode("utf-8")
-    pokemon = request_pokemon(pokemon_name)
+    try:
+        pokemon = request_pokemon(pokemon_name)
+    except APIRequestException as e:
+        return make_response({'error': str(e)}, 404)
     ftp_service = services_provider.ServicesProvider.ftp_service()
     dir_name = datetime.datetime.now().strftime("%Y-%m-%d")
     try:
@@ -180,6 +191,6 @@ def api_save_pokemon_to_ftp():
                 )
             )
     except FTPErrorPermException as e:
-        return make_response({'error': str(e)}, 400)
+        return make_response({'error': str(e)}, 500)
 
     return "success"

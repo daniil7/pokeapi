@@ -1,3 +1,4 @@
+from tests import UnitTestResponse
 from app.cache_service.cache_file import CacheFile
 
 class Test:
@@ -7,6 +8,6 @@ class Test:
         some_list = ['A', 'B', 'C', 'D']
         service.write_cache(some_list)
         if service.read_cache() == some_list:
-            return True, "success"
+            return UnitTestResponse.SUCCESS, "success"
         else:
-            return False, "wrote and read data is not match"
+            return UnitTestResponse.ERROR, "wrote and read data is not match"

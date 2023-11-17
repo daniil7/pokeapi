@@ -1,5 +1,6 @@
 import importlib, os
 
+from tests import UnitTestResponse
 from setuptools import find_packages
 from pkgutil import iter_modules
 
@@ -32,18 +33,23 @@ print("\n-------------------------------\n")
 for module_name in test_modules:
     loader = importlib.machinery.SourceFileLoader(module_name, test_modules[module_name])
     module = loader.load_module()
-    result = False
+    result = None
     message = ""
     try:
         result, message = module.Test.do()
     except Exception as e:
-        print("Test " + module_name + f" {bcolors.WARNING}FAILED WITH EXCEPTION{bcolors.ENDC}")
+        print("Test " + module_name + f" {bcolors.FAIL}FAILED WITH EXCEPTION{bcolors.ENDC}")
         print(str(e))
         continue
-    if result:
+    if result == UnitTestResponse.SUCCESS:
         print("Test " + module_name + f" {bcolors.OKGREEN}PASSED{bcolors.ENDC}")
-    else:
-        print("Test " + module_name + f" {bcolors.WARNING}FAILED WITH MESSAGE{bcolors.ENDC}")
+    elif result == UnitTestResponse.ERROR:
+        print("Test " + module_name + f" {bcolors.FAIL}FAILED WITH MESSAGE{bcolors.ENDC}")
         print(message)
+    elif result == UnitTestResponse.WARNING:
+        print("Test " + module_name + f" {bcolors.WARNING}PASSED WITH WARNING{bcolors.ENDC}")
+        print(message)
+    else:
+        print("Test " + module_name + f" {bcolors.FAIL}UNDEFINED STATUS CODE{bcolors.ENDC}")
 
 print()
