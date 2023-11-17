@@ -1,7 +1,7 @@
 from app.settings import CONFIG
 from app.mail_service import mail_interface, mail_test, mail_log, mail_smtp
 from app.logs_service import logs_interface, logs_test, logs_file
-from app.cache_service import cache_interface, cache_test, cache_file
+from app.cache_service import cache_interface, cache_test, cache_file, cache_redis
 from app.ftp_service import ftp_interface, ftp_test, ftp_service
 
 import functools
@@ -53,6 +53,8 @@ class ServicesProvider:
         match CONFIG['CACHE_DRIVER']:
             case 'file':
                 return cache_file.CacheFile(cache_instance)
+            case 'redis':
+                return cache_redis.CacheRedis(cache_instance)
             case 'none':
                 return cache_test.CacheTest(cache_instance)
 
