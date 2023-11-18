@@ -8,3 +8,4 @@ app/static/storage/
 database/
 logs/
 cache/
+geckodriver
