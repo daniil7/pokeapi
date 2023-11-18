@@ -33,6 +33,7 @@ def open_firefox():
     options = Options()
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
+    options.add_argument("--headless")
 
     service = Service(executable_path=os.environ.get("GECKODRIVER_PATH"))
     driver = webdriver.Firefox(options=options, service=service)
@@ -160,4 +161,4 @@ if __name__ == "__main__":
     ]
     test_batch(browser, tests)
 
-    #browser.quit()
+    browser.quit()
