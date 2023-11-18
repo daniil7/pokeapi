@@ -7,3 +7,4 @@ psycopg2
 jsonschema
 redis
 hiredis
+selenium
