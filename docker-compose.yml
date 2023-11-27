@@ -12,8 +12,8 @@ services:
             - ftpd
         volumes:
             - public-app-data:/app/app/static/storage
-            - cache-app-data:/app/database
-            - db-app-data:/app/cache
+            - db-app-data:/app/database
+            - cache-app-data:/app/cache
             - logs-app-data:/app/logs
         networks:
             - db-conn

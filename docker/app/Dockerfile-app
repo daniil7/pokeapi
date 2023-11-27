@@ -2,12 +2,15 @@ FROM python:3.12.0-bookworm
 
 WORKDIR /app
 
-COPY requirements.txt .
-RUN python3 -m pip install -r requirements.txt
-
 COPY . .
+
+RUN python -m pip install --no-cache-dir poetry
+
+RUN poetry config virtualenvs.in-project true \
+    && poetry install --without dev,test --no-interaction --no-ansi
+
 COPY --from=pokeapi-frontend /app/app/static/build ./app/static/build
 
 RUN mkdir logs database cache app/static/storage -p
 
-CMD ["gunicorn", "-c", "gunicorn_config.py", "app:app"]
+CMD /app/.venv/bin/gunicorn -c gunicorn_config.py app:app

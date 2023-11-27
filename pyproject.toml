@@ -1,0 +1,33 @@
+[tool.poetry]
+name = "pokeapi"
+version = "0.1.0"
+description = ""
+authors = ["daniil7 <daniil.k@mail.ru>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+flask = "^3.0.0"
+requests = "^2.31.0"
+python-dotenv = "^1.0.0"
+sqlalchemy = "^2.0.23"
+psycopg2 = "^2.9.9"
+jsonschema = "^4.20.0"
+redis = "^5.0.1"
+hiredis = "^2.2.3"
+
+
+[tool.poetry.group.prod.dependencies]
+gunicorn = "^21.2.0"
+
+
+[tool.poetry.group.test.dependencies]
+selenium = "^4.15.2"
+
+
+[tool.poetry.group.dev.dependencies]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
