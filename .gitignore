@@ -2,6 +2,7 @@
 .env.production
 **/__pycache__/
 **/*.pyc
+.eslintrc.js
 node_modules/
 app/static/build/
 app/static/storage/
