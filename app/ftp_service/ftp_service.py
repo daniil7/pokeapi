@@ -14,6 +14,7 @@ class FTPService(FTPInterface):
         self.ftp = ftplib.FTP()
         self.ftp.connect(self.host, self.port)
         self.ftp.login(self.user, self.password)
+        self.binary_data = []
 
     def __del__(self):
         self.ftp.close()
@@ -39,7 +40,8 @@ class FTPService(FTPInterface):
     def read_file(self, path: str) -> str:
         try:
             self.binary_data = []
-            resp = self.ftp.retrbinary("RETR " + path, callback=self.__handle_binary)
+            resp = self.ftp.retrbinary("RETR " + path,
+                                       callback=self.__handle_binary)
             data = b"".join(self.binary_data)
             return data.decode("utf-8")
         except ftplib.error_perm as e:
@@ -48,14 +50,12 @@ class FTPService(FTPInterface):
     def write_file(self, path: str, data: str):
         try:
             file = io.BytesIO()
-            file_wrapper = io.TextIOWrapper(
-                    file,
-                    encoding='utf-8',
-                    line_buffering=True
-                )
+            file_wrapper = io.TextIOWrapper(file,
+                                            encoding='utf-8',
+                                            line_buffering=True)
             file_wrapper.write(data)
-            file_wrapper.seek(0,0)
-            file.seek(0,0)
+            file_wrapper.seek(0, 0)
+            file.seek(0, 0)
             self.ftp.storbinary("STOR " + path, file)
         except ftplib.error_perm as e:
             raise FTPErrorPermException(str(e))

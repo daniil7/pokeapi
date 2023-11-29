@@ -4,13 +4,10 @@ import time
 
 from app.cache_service.cache_interface import CacheInterface
 
-
 CACHE_DIRECTORY = "cache"
 
-class CacheFile(CacheInterface):
 
-    def __init__(self, cache_name: str):
-        super().__init__(cache_name)
+class CacheFile(CacheInterface):
 
     def read_cache(self):
         cache_file = CACHE_DIRECTORY + '/' + self.cache_name + '.json'
@@ -22,7 +19,8 @@ class CacheFile(CacheInterface):
                 except json.decoder.JSONDecodeError:
                     return None
             if 'data' in cache and 'time' in cache:
-                if int(time.time()) - int(cache['time']) < self.CACHE_EXPIRATION:
+                if int(time.time()) - int(
+                        cache['time']) < self.CACHE_EXPIRATION:
                     return cache['data']
         return None
 
@@ -30,7 +28,4 @@ class CacheFile(CacheInterface):
         os.makedirs(CACHE_DIRECTORY, exist_ok=True)
         cache_file = CACHE_DIRECTORY + '/' + self.cache_name + '.json'
         with open(cache_file, 'w+', encoding="utf-8") as f:
-            f.write(json.dumps({
-                'time': int(time.time()),
-                'data': data
-            }))
+            f.write(json.dumps({'time': int(time.time()), 'data': data}))

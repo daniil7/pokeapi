@@ -5,10 +5,11 @@ from app.logs_service.logs_file import LogsFile, LOGS_DIR
 
 class Test:
 
+    @staticmethod
     def do():
         service = LogsFile('test/test_write')
         service.write("test line")
-        with open(LOGS_DIR + '/test/test_write', 'r') as file:
+        with open(LOGS_DIR + '/test/test_write', 'r', encoding='utf-8') as file:
             lines = file.readlines()
         lines = list(filter(lambda line: line != "\n", lines))
         lines = list(map(lambda line: line.replace("\n", ""), lines))
@@ -20,7 +21,7 @@ class Test:
         service = LogsFile('test/test_write_add')
         service.write_add("test line 1")
         service.write_add("test line 2")
-        with open(LOGS_DIR + '/test/test_write_add', 'r') as file:
+        with open(LOGS_DIR + '/test/test_write_add', 'r', encoding='utf-8') as file:
             lines = file.readlines()
         lines = list(filter(lambda line: line != "\n", lines))
         lines = list(map(lambda line: line.replace("\n", ""), lines))

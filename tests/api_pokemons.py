@@ -1,15 +1,14 @@
 import requests
 import jsonschema
 
-from pathlib import Path
-
 from tests import UnitTestResponse
 
 
 class Test:
 
+    @staticmethod
     def do():
-        request = requests.get('http://localhost:5000/api/pokemon')
+        request = requests.get('http://localhost:5000/api/pokemon', timeout=10)
         match request.status_code:
             case 200:
                 # Валидация json
@@ -18,14 +17,19 @@ class Test:
                     'items': {
                         'type': 'object',
                         'properties': {
-                            'name': {'type': 'string'},
-                            'url': {'type': 'string'}
+                            'name': {
+                                'type': 'string'
+                            },
+                            'url': {
+                                'type': 'string'
+                            }
                         }
                     }
                 }
                 try:
-                    jsonschema.validate(instance=request.json(), schema=required_schema)
-                except Exception as e:
+                    jsonschema.validate(instance=request.json(),
+                                        schema=required_schema)
+                except Exception:
                     return UnitTestResponse.ERROR, 'invalid JSON schema'
                 return UnitTestResponse.SUCCESS, 'success'
             case 404:

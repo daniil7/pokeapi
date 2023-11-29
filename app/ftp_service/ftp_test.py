@@ -3,9 +3,6 @@ from app.ftp_service.ftp_interface import FTPInterface
 
 class FTPTest(FTPInterface):
 
-    def __init__(self):
-        super().__init__()
-
     def scandir(self, path: str = './') -> list:
         return []
 
