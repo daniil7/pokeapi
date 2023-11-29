@@ -1,10 +1,10 @@
+import functools
+
 from app.settings import CONFIG
 from app.mail_service import mail_interface, mail_test, mail_log, mail_smtp
 from app.logs_service import logs_interface, logs_test, logs_file
 from app.cache_service import cache_interface, cache_test, cache_file, cache_redis
 from app.ftp_service import ftp_interface, ftp_test, ftp_service
-
-import functools
 
 
 testing_plug = None
@@ -28,6 +28,7 @@ def inject_test(test_service):
 class ServicesProvider:
 
     @inject_test(mail_test.MailTest)
+    @staticmethod
     def mail_service(mailto: str) -> mail_interface.MailInterface:
         # Определение сервиса электронной почты в зависимости от настройки MAIL_DRIVER.
         match CONFIG['MAIL_DRIVER']:
@@ -39,6 +40,7 @@ class ServicesProvider:
                 return mail_test.MailTest(mailto)
 
     @inject_test(logs_test.LogsTest)
+    @staticmethod
     def logs_service(log_instance: str) -> logs_interface.LogsInterface:
         # Определение сервиса логирования
         match CONFIG['LOGS_DRIVER']:
@@ -48,6 +50,7 @@ class ServicesProvider:
                 return logs_test.LogsTest(log_instance)
 
     @inject_test(cache_test.CacheTest)
+    @staticmethod
     def cache_service(cache_instance: str) -> cache_interface.CacheInterface:
         # Определение сервиса кэширования
         match CONFIG['CACHE_DRIVER']:
@@ -59,6 +62,7 @@ class ServicesProvider:
                 return cache_test.CacheTest(cache_instance)
 
     @inject_test(ftp_test.FTPTest)
+    @staticmethod
     def ftp_service() -> ftp_interface.FTPInterface:
         # Определение сервиса FTP
         match CONFIG['FTP_DRIVER']:

@@ -1,14 +1,13 @@
-import random
-import json
-import jsonschema
 import datetime
 import pathlib
 import functools
+import random
+import json
 
-import app.services_provider as services_provider
-
+import jsonschema
 from flask import render_template, make_response, request
 
+from app import services_provider
 from app import app
 from app.pokemon_api import request_pokemons, request_pokemon, APIRequestException
 from app.database import db_session
@@ -26,7 +25,7 @@ def content_type(value: str):
                                       value.replace(" ", "").lower().split(";")))
             request_types  = list(map(lambda t: t.strip(),
                                       request.headers.get("Content-Type").replace(" ", "").lower().split(";")))
-            if not required_types == request_types:
+            if required_types != request_types:
                 error_message = {
                     'error': 'not supported Content-Type'
                 }
@@ -38,12 +37,12 @@ def content_type(value: str):
 
 @app.route('/')
 @app.route('/index')
-def index():
+def index_route():
     # Главная страница приложения, отображает шаблон "index.html".
     return render_template("index.html", title='Home')
 
 @app.route('/pokemon/<pokemon_name>')
-def pokemon(pokemon_name):
+def pokemon_route(pokemon_name):
     # Отображает информацию о конкретном покемоне по его имени.
     pokemon = request_pokemon(pokemon_name)
     return render_template(
@@ -54,7 +53,7 @@ def pokemon(pokemon_name):
     )
 
 @app.route('/battle/<user_pokemon_name>')
-def battle(user_pokemon_name):
+def battle_route(user_pokemon_name):
     # Сцена с боем между покемоном пользователя и случайно выбранным врагом.
     user_pokemon = request_pokemon(user_pokemon_name)
     enemy_pokemon_name = random.choice(request_pokemons())['name']
@@ -83,7 +82,7 @@ def battle(user_pokemon_name):
 #
 
 @app.route('/api/pokemon')
-def api_pokemons():
+def api_pokemons_route():
     # API-маршрут для получения списка покемонов.
     try:
         pokemons = request_pokemons()
@@ -97,7 +96,7 @@ def api_pokemons():
     )
 
 @app.route('/api/pokemon/<pokemon_name>')
-def api_certain_pokemon(pokemon_name):
+def api_certain_pokemon_route(pokemon_name):
     # API-маршрут для получения информации о конкретном покемоне по его имени.
     try:
         return app.response_class(
@@ -110,7 +109,7 @@ def api_certain_pokemon(pokemon_name):
 
 @app.route('/api/battle/write-result', methods=['POST'])
 @content_type('application/json; charset=UTF-8')
-def api_battle_write_result():
+def api_battle_write_result_route():
     # API-маршрут для записи результатов битвы.
 
     score = request.json
@@ -140,7 +139,7 @@ def api_battle_write_result():
     }
     try:
         jsonschema.validate(instance=request.json, schema=required_schema)
-    except Exception as e:
+    except Exception:
         return make_response({'error': 'invalid json schema', 'test': score}, 400)
 
     battle_result = BattlesHistory(
@@ -165,7 +164,7 @@ def api_battle_write_result():
 
 @app.route('/api/ftp/save-pokemon', methods=['POST'])
 @content_type('text/plain; charset=UTF-8')
-def api_save_pokemon_to_ftp():
+def api_save_pokemon_to_ftp_route():
     # API-маршрут для записи информации о покемоне на внешнем ftp сервере
 
     pokemon_name = request.data.decode("utf-8")

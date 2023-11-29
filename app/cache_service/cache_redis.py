@@ -1,29 +1,27 @@
-import os
-import json
 import time
-import redis
 import pickle
+
+import redis
 
 from app.cache_service.cache_interface import CacheInterface
 from app.settings import CONFIG
 
 CACHE_ROOT = "cache"
 
+
 class CacheRedis(CacheInterface):
 
     def __init__(self, cache_name: str):
         super().__init__(cache_name)
-        self.redis_connection = redis.Redis(
-            host=CONFIG['CACHE_REDIS_HOST'],
-            port=CONFIG['CACHE_REDIS_PORT'],
-            decode_responses=False
-        )
+        self.redis_connection = redis.Redis(host=CONFIG['CACHE_REDIS_HOST'],
+                                            port=CONFIG['CACHE_REDIS_PORT'],
+                                            decode_responses=False)
 
     def __del__(self):
         self.redis_connection.close()
 
     def read_cache(self):
-        cache_instance = CACHE_ROOT+":"+self.cache_name
+        cache_instance = CACHE_ROOT + ":" + self.cache_name
         p_cache = self.redis_connection.get(cache_instance)
         if p_cache is None:
             return None
@@ -34,7 +32,7 @@ class CacheRedis(CacheInterface):
         return None
 
     def write_cache(self, data):
-        cache_instance = CACHE_ROOT+":"+self.cache_name
+        cache_instance = CACHE_ROOT + ":" + self.cache_name
         cache = {
             'time': int(time.time()),
             'data': data,

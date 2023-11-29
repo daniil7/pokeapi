@@ -1,17 +1,18 @@
 import requests
-import jsonschema
 
 from tests import UnitTestResponse
 
 
 class Test:
 
+    @staticmethod
     def do():
         headers = {'Content-type': 'text/plain; charset=UTF-8'}
         request = requests.post(
                 'http://localhost:5000/api/ftp/save-pokemon',
                 data="PokemonThatDoNotExists",
                 headers=headers,
+                timeout=10
         )
         if request.status_code != 404:
             return UnitTestResponse.ERROR, 'Expected 404. Unexpected status code with wrong data '+str(request.status_code)
@@ -20,6 +21,7 @@ class Test:
                 'http://localhost:5000/api/ftp/save-pokemon',
                 data="bulbasaur",
                 headers=headers,
+                timeout=10
         )
         match request.status_code:
             case 200:

@@ -24,6 +24,7 @@ gunicorn = "^21.2.0"
 
 [tool.poetry.group.test.dependencies]
 selenium = "^4.15.2"
+setuptools = "^69.0.2"
 
 
 [tool.poetry.group.dev.dependencies]
