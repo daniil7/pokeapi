@@ -5,13 +5,15 @@ import random
 import json
 
 import jsonschema
-from flask import render_template, make_response, request
+from flask import render_template, make_response, request, redirect
+from flask_login import login_user, logout_user
+from sqlalchemy import exists as db_exists, or_ as db_or
 
 from app import services_provider
 from app import app
 from app.pokemon_api import request_pokemons, request_pokemon, APIRequestException
 from app.database import db_session
-from app.models import BattlesHistory
+from app.models import BattlesHistory, User
 from app.settings import CONFIG
 from app.ftp_service.ftp_interface import FTPErrorPermException
 
@@ -51,6 +53,40 @@ def pokemon_route(pokemon_name):
         pokemon=pokemon,
         pokemon_name=pokemon_name
     )
+
+@app.route('/register', methods=["GET", "POST"])
+def register():
+    if request.method == "POST":
+        if request.form.get("password") != request.form.get("password_confirmation") or \
+            db_session.query(db_exists().where(
+                db_or(
+                    User.username == request.form.get('username'),
+                    User.email == request.form.get('email')
+                )
+            )).scalar():
+            return redirect("/register")
+        user = User(username=request.form.get("username"),
+                    email=request.form.get("email"))
+        user.set_password(request.form.get("password"))
+        db_session.add(user)
+        db_session.commit()
+        return redirect('/login')
+    return render_template("sign_up.html")
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        user = User.query.filter_by(
+            username=request.form.get("username")).first()
+        if user is not None and user.check_password(request.form.get("password")):
+            login_user(user)
+            return redirect('/')
+    return render_template("login.html")
+
+@app.route("/logout")
+def logout():
+    logout_user()
+    return redirect('/')
 
 @app.route('/battle/<user_pokemon_name>')
 def battle_route(user_pokemon_name):

@@ -16,6 +16,7 @@ psycopg2 = "^2.9.9"
 jsonschema = "^4.20.0"
 redis = "^5.0.1"
 hiredis = "^2.2.3"
+flask-login = "^0.6.3"
 
 
 [tool.poetry.group.prod.dependencies]

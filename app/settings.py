@@ -5,6 +5,9 @@ from dotenv import load_dotenv
 load_dotenv()
 
 CONFIG = {
+
+    'APP_SECRET_KEY': os.environ.get('APP_SECRET_KEY', None),
+
     'TEST_MODE': os.environ.get('TEST_MODE', 'FALSE') == 'TRUE',
 
     'LOGS_DRIVER': os.environ.get('LOGS_DRIVER', 'file'),
