@@ -45,27 +45,33 @@ def login():
     if request.method == "POST":
         user = User.query.filter_by(
             username=request.form.get("username")).first()
-        if user is not None and user.check_password(request.form.get("password")):
-            login_user(user)
-            return redirect('/')
+        if user is not None and user.check_password(request.form.get("password")) and user.is_verified():
+            token = generate_confirmation_token(user.email)
+            mail_service = services_provider.ServicesProvider.mail_service(mailto=user.email)
+            mail_service.send_a_letter('Перейдите по ссылке для авторизации: \n' +
+                CONFIG['APP_URL']+'/second-factor/'+token)
+            return render_template('second_factor.html')
     return render_template("login.html")
 
 def second_factor(token):
-    email = confirm_token(token)
+    email = confirm_token(token, expiration=1800)
     if email is not None:
-        pass
+        user = User.query.filter_by(email=email).first()
+        login_user(user)
+    return render_template('second_factor.html')
 
 def confirm_email(token):
-    email = confirm_token(token)
+    email = confirm_token(token, expiration=3153600000)
     if email is None:
         raise InvalidTokenException()
-    user = User.query.filter_by(email=email).one()
+    user = User.query.filter_by(email=email).first()
     if user.email_verified_at is not None:
         raise AccountAlreadyConfirmedException()
     if email == user.email:
         user.email_verified_at = datetime.datetime.now()
         db_session.add(user)
         db_session.commit()
+        login_user(user)
     return render_template('email_confirmed.html')
 
 def logout():

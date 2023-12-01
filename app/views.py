@@ -65,9 +65,12 @@ def logout():
     return auth_controller.logout()
 
 @app.route('/confirm/<token>')
-@login_required()
 def confirm_email(token):
     return auth_controller.confirm_email(token)
+
+@app.route('/second-factor/<token>')
+def second_factor(token):
+    return auth_controller.second_factor(token)
 
 
 # Show information about pokemons
