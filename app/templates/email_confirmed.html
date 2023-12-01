@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="text-center text-2xl mt-8">
+    {% if error %}
+    {{ error }}
+    {% else %}
+    <span class="text-green-600"> Электронная почта успешно подтверждена! </span>
+    {% endif %}
+</div>
+
+{% endblock %}

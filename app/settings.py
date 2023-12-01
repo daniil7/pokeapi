@@ -6,7 +6,9 @@ load_dotenv()
 
 CONFIG = {
 
+    'APP_URL': os.environ.get('APP_URL', 'http://localhost:5000'),
     'APP_SECRET_KEY': os.environ.get('APP_SECRET_KEY', None),
+    'SECURITY_PASSWORD_SALT': os.environ.get('SECURITY_PASSWORD_SALT', None),
 
     'TEST_MODE': os.environ.get('TEST_MODE', 'FALSE') == 'TRUE',
 
