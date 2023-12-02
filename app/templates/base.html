@@ -8,7 +8,21 @@
     <script defer src="/static/build/bundle.js"></script>
   </head>
   <body>
-    <div class="text-xl p-4">Покемон API: <a href="/index">Главная</a></div>
+    <div class="text-xl p-4">Покемон API:
+        <a href="/index">Главная</a>
+        <div>
+            {% if current_user.is_authenticated %}
+            <span>Вы авторизованы</span>
+            <span>{{ current_user.username }}</span>
+            <a href="/logout">Выйти</a>
+            {% else %}
+            <span>Вы не авторизованы</span>
+            <a href="/login">Войти</a>
+            <a href="/register">Зарегистрироваться</a>
+            <a href="/authorize/yandex">Yandex</a>
+            {% endif %}
+        </div>
+    </div>
     <hr>
     {% block content %}{% endblock %}
   </body>
