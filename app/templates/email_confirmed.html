@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="text-center text-2xl mt-8">
+   {% if current_user.is_authenticated %}
+   <span class="text-green-600"> Аккаунт успешно подтверждён! </span>
+   {% else %}
+   <span>Пожалуйста, перейдите по ссылке на вашей электронной почте</span>
+   {% endif %}
+</div>
+
+{% endblock %}
