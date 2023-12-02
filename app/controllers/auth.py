@@ -11,19 +11,23 @@ from app.database import db_session
 from app.models import User
 from app.email_token import generate_confirmation_token, confirm_token
 from app.settings import CONFIG
+from app.forms.registration import RegistrationForm
+from app.forms.authentification import AuthenticationForm
 
 
 def register():
-    if request.method == "POST":
-        if request.form.get("password") != request.form.get("password_confirmation"):
-            return render_template('sign_up.html', error="Пароли не совпадают")
+    form = RegistrationForm(request.form)
+
+    if request.method == "POST" and form.validate():
+
         if db_session.query(db_exists().where(
                 db_or(
                     User.username == request.form.get('username'),
                     User.email == request.form.get('email')
                 )
             )).scalar():
-            return render_template('sign_up.html', error="Email зарегистрирован или username занят")
+            return render_template('sign_up.html', form=form, error="Email зарегистрирован или username занят")
+
         user = User(username=request.form.get("username"),
                     email=request.form.get("email"))
         user.set_password(request.form.get("password"))
@@ -39,18 +43,20 @@ def register():
 
         return render_template("email_confirmed.html")
 
-    return render_template("sign_up.html")
+    return render_template("sign_up.html", form=form)
 
 def login():
-    if request.method == "POST":
+    form = AuthenticationForm(request.form)
+
+    if request.method == "POST" and form.validate():
 
         user = User.query.filter_by(
             username=request.form.get("username")).first()
 
         if user is None or not user.check_password(request.form.get("password")):
-            return render_template('login.html', error="Неверный логин или пароль")
+            return render_template('login.html', form=form, error="Неверный логин или пароль")
         if not user.is_verified():
-            return render_template('login.html', error="Аккаунт не подтверждён")
+            return render_template('login.html', form=form, error="Аккаунт не подтверждён")
 
         token = generate_confirmation_token(user.email)
         mail_service = services_provider.ServicesProvider.mail_service(mailto=user.email)
@@ -59,7 +65,7 @@ def login():
 
         return render_template('second_factor.html')
 
-    return render_template("login.html")
+    return render_template("login.html", form=form)
 
 def second_factor(token):
     email = confirm_token(token, expiration=1800)

@@ -1,26 +1,20 @@
 {% extends "base.html" %}
 {% block content %}
 
+{% from "helpers/formhelpers.html" import render_field %}
+
 <div>
     <form action="/register", method="POST"
-          class="flex mt-2 justify-center items-center">
+          class="flex mt-2 justify-center items-center mt-4">
         <div class="flex flex-col gap-2">
-            <div>
-                <label for="username">Имя пользователя</label>
-                <input type="text" name="username" required class="rounded border-2 border-black border-solid px-2" />
-            </div>
-            <div>
-                <label for="email">Email</label>
-                <input type="text" name="email" required class="rounded border-2 border-black border-solid px-2" />
-            </div>
-            <div>
-                <label for="password">Пароль</label>
-                <input type="text" name="password" required class="rounded border-2 border-black border-solid px-2" />
-            </div>
-            <div>
-                <label for="password_confirmation">Подтверждение пароля</label>
-                <input type="text" name="password_confirmation" required class="rounded border-2 border-black border-solid px-2" />
-            </div>
+            {{ render_field(form.username, class_="rounded border-2 border-black border-solid px-2") }}
+            <hr />
+            {{ render_field(form.email, class_="rounded border-2 border-black border-solid px-2") }}
+            <hr />
+            {{ render_field(form.password, class_="rounded border-2 border-black border-solid px-2") }}
+            <hr />
+            {{ render_field(form.confirm, class_="rounded border-2 border-black border-solid px-2") }}
+            <hr />
             <button type="submit">Зарегистрироваться</button>
             {% if error %}
             <div class="mt-4 text-white bg-red-500 py-2 px-4">
