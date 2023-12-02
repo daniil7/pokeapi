@@ -15,14 +15,15 @@ from app.settings import CONFIG
 
 def register():
     if request.method == "POST":
-        if request.form.get("password") != request.form.get("password_confirmation") or \
-            db_session.query(db_exists().where(
+        if request.form.get("password") != request.form.get("password_confirmation"):
+            return render_template('sign_up.html', error="Пароли не совпадают")
+        if db_session.query(db_exists().where(
                 db_or(
                     User.username == request.form.get('username'),
                     User.email == request.form.get('email')
                 )
             )).scalar():
-            return redirect("/register")
+            return render_template('sign_up.html', error="Email зарегистрирован или username занят")
         user = User(username=request.form.get("username"),
                     email=request.form.get("email"))
         user.set_password(request.form.get("password"))
@@ -36,21 +37,28 @@ def register():
                 Если вы не регистрировались, проигнорируйте это сообщение. \n' +
                 CONFIG['APP_URL']+'/confirm/'+token)
 
-        login_user(user)
+        return render_template("email_confirmed.html")
 
-        return redirect('/')
     return render_template("sign_up.html")
 
 def login():
     if request.method == "POST":
+
         user = User.query.filter_by(
             username=request.form.get("username")).first()
-        if user is not None and user.check_password(request.form.get("password")) and user.is_verified():
-            token = generate_confirmation_token(user.email)
-            mail_service = services_provider.ServicesProvider.mail_service(mailto=user.email)
-            mail_service.send_a_letter('Перейдите по ссылке для авторизации: \n' +
-                CONFIG['APP_URL']+'/second-factor/'+token)
-            return render_template('second_factor.html')
+
+        if user is None or not user.check_password(request.form.get("password")):
+            return render_template('login.html', error="Неверный логин или пароль")
+        if not user.is_verified():
+            return render_template('login.html', error="Аккаунт не подтверждён")
+
+        token = generate_confirmation_token(user.email)
+        mail_service = services_provider.ServicesProvider.mail_service(mailto=user.email)
+        mail_service.send_a_letter('Перейдите по ссылке для авторизации: \n' +
+            CONFIG['APP_URL']+'/second-factor/'+token)
+
+        return render_template('second_factor.html')
+
     return render_template("login.html")
 
 def second_factor(token):
@@ -58,6 +66,8 @@ def second_factor(token):
     if email is not None:
         user = User.query.filter_by(email=email).first()
         login_user(user)
+    else:
+        raise InvalidTokenException()
     return render_template('second_factor.html')
 
 def confirm_email(token):
@@ -87,7 +97,7 @@ class AccountAlreadyConfirmedException(werkzeug.exceptions.HTTPException):
     description = 'Аккаунт уже подтверждён.'
 
 def TokenErrorHandler(e):
-    return render_template('email_confirmed.html', error=e.description)
+    return render_template('error_page.html', error=e.description)
 
 app.register_error_handler(InvalidTokenException, TokenErrorHandler)
 app.register_error_handler(AccountAlreadyConfirmedException, TokenErrorHandler)

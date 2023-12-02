@@ -42,10 +42,9 @@ class User(Base, UserMixin):
     updated_at = Column(DateTime(), default=datetime.datetime.utcnow,  onupdate=datetime.datetime.utcnow)
 
     provider_id = Column(String(64), nullable=True)
-    # provider_user_id = Column(String(64), nullable=True)
 
     def is_verified(self):
-        return (self.email_verified_at is not None) or (self.provider is not None)
+        return (self.email_verified_at is not None) or (self.provider_id is not None)
 
     def __repr__(self):
         return f"<{self.id}:{self.username}>"

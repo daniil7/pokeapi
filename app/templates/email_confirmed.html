@@ -2,11 +2,11 @@
 {% block content %}
 
 <div class="text-center text-2xl mt-8">
-    {% if error %}
-    {{ error }}
-    {% else %}
-    <span class="text-green-600"> Электронная почта успешно подтверждена! </span>
-    {% endif %}
+   {% if current_user.is_authenticated %}
+   <span class="text-green-600"> Аккаунт успешно подтверждён! </span>
+   {% else %}
+   <span>Пожалуйста, перейдите по ссылке на вашей электронной почте</span>
+   {% endif %}
 </div>
 
 {% endblock %}

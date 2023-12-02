@@ -1,6 +1,6 @@
 import functools
 
-from flask import make_response, request, abort, url_for, redirect
+from flask import make_response, request, abort
 from flask_login import current_user
 
 from app import app

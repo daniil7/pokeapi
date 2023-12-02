@@ -29,7 +29,9 @@ selenium = "^4.15.2"
 setuptools = "^69.0.2"
 
 
+
 [tool.poetry.group.dev.dependencies]
+pylint = "^3.0.2"
 
 [build-system]
 requires = ["poetry-core"]
