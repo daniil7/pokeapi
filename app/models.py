@@ -15,6 +15,7 @@ class BattlesHistory(Base):
     enemy_pokemon = Column(String(50), unique=False)
     user_score = Column(Integer)
     enemy_score = Column(Integer)
+    user_id = Column(Integer, nullable=True)
 
     def __init__(
             self,

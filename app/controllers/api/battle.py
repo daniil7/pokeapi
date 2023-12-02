@@ -1,5 +1,6 @@
 import jsonschema
 from flask import request, make_response
+from flask_login import current_user
 
 from app.models import BattlesHistory
 from app.database import db_session
@@ -45,6 +46,7 @@ def api_battle_write_result_route():
         score['user_pokemon']['score'],
         score['enemy_pokemon']['score'],
     )
+    battle_result.user_id = current_user.id if current_user.is_authenticated else None
     db_session.add(battle_result)
     db_session.commit()
     mail_service = services_provider.ServicesProvider.mail_service(CONFIG['MAIL_TO_ADDRESS'])
