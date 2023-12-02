@@ -1,6 +1,6 @@
 import functools
 
-from flask import make_response, request, abort
+from flask import make_response, request, abort, url_for, redirect
 from flask_login import current_user
 
 from app import app
@@ -8,6 +8,7 @@ from app import app
 from app.controllers import auth as auth_controller
 from app.controllers import show_pokemons as show_pokemons_controller
 from app.controllers import battle as battle_controller
+from app.controllers import oauth as oauth_controller
 from app.controllers.api import retrive_pokemons as retrive_pokemons_api_controller
 from app.controllers.api import battle as battle_api_controller
 from app.controllers.api import data_dumping as data_dumping_api_controller
@@ -72,6 +73,13 @@ def confirm_email(token):
 def second_factor(token):
     return auth_controller.second_factor(token)
 
+@app.route('/authorize/<provider>')
+def oauth_authorize(provider):
+    return oauth_controller.oauth_authorize(provider)
+
+@app.route('/callback/<provider>')
+def oauth_callback(provider):
+    return oauth_controller.oauth_callback(provider)
 
 # Show information about pokemons
 #
@@ -79,7 +87,7 @@ def second_factor(token):
 
 @app.route('/')
 @app.route('/index')
-def index_pokemons():
+def index():
     # Главная страница приложения, отображает шаблон "index.html".
     return show_pokemons_controller.index_pokemons()
 

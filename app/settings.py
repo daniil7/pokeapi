@@ -10,6 +10,17 @@ CONFIG = {
     'APP_SECRET_KEY': os.environ.get('APP_SECRET_KEY', None),
     'SECURITY_PASSWORD_SALT': os.environ.get('SECURITY_PASSWORD_SALT', None),
 
+    'OAUTH_CREDENTIALS': {
+        'vk': {
+            'id': os.environ.get('VK_OAUTH_ID', None),
+            'secret': os.environ.get('VK_OAUTH_SECRET', None)
+        },
+        'yandex': {
+            'id': os.environ.get('YANDEX_OAUTH_ID', None),
+            'secret': os.environ.get('YANDEX_OAUTH_SECRET', None)
+        }
+    },
+
     'TEST_MODE': os.environ.get('TEST_MODE', 'FALSE') == 'TRUE',
 
     'LOGS_DRIVER': os.environ.get('LOGS_DRIVER', 'file'),
