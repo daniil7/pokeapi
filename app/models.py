@@ -35,7 +35,7 @@ class User(Base, UserMixin):
     __tablename__ = 'users'
     id = Column(Integer(), primary_key=True)
     username = Column(String(30), nullable=False, unique=True)
-    password = Column(String(100), nullable=False)
+    password = Column(String(100), nullable=True)
     email = Column(String(100), nullable=True, unique=True)
     email_verified_at = Column(DateTime(), nullable=True, default=None)
     created_at = Column(DateTime(), default=datetime.datetime.utcnow)

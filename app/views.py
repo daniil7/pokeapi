@@ -81,6 +81,10 @@ def oauth_authorize(provider):
 def oauth_callback(provider):
     return oauth_controller.oauth_callback(provider)
 
+@app.route('/oauth-confirm-registration', methods=["GET", "POST"])
+def oauth_confirm_registration():
+    return oauth_controller.oauth_confirm_registration()
+
 # Show information about pokemons
 #
 #
