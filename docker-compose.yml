@@ -59,6 +59,17 @@ services:
         networks:
             - ftpd-conn
 
+    grafana:
+        image: grafana/grafana
+        container_name: pokeapi-grafana
+        volumes:
+            - grafana:/var/lib/grafana
+        networks:
+            - db-conn
+        ports:
+            - 3000:3000
+
+
 volumes:
     db-data:
     cache-data:
@@ -67,6 +78,7 @@ volumes:
     cache-app-data:
     db-app-data:
     logs-app-data:
+    grafana:
 
 networks:
     db-conn:

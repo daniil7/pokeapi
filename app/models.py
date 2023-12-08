@@ -17,6 +17,9 @@ class BattlesHistory(Base):
     enemy_score = Column(Integer)
     user_id = Column(Integer, nullable=True)
 
+    created_at = Column(DateTime(), default=datetime.datetime.utcnow)
+    updated_at = Column(DateTime(), default=datetime.datetime.utcnow,  onupdate=datetime.datetime.utcnow)
+
     def __init__(
             self,
             user_pokemon,
