@@ -85,6 +85,14 @@ def oauth_callback(provider):
 def oauth_confirm_registration():
     return oauth_controller.oauth_confirm_registration()
 
+@app.route('/reset-password-request', methods=["GET", "POST"])
+def reset_password_request():
+    return auth_controller.reset_password_request()
+
+@app.route('/reset-password', methods=["GET", "POST"])
+def reset_password():
+    return auth_controller.reset_password()
+
 # Show information about pokemons
 #
 #

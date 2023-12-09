@@ -13,6 +13,8 @@ from app.email_token import generate_confirmation_token, confirm_token
 from app.settings import CONFIG
 from app.forms.registration import RegistrationForm
 from app.forms.authentification import AuthenticationForm
+from app.forms.reset_password_request import ResetPasswordRequestForm
+from app.forms.reset_password import ResetPasswordForm
 
 
 def register():
@@ -53,6 +55,9 @@ def login():
         user = User.query.filter_by(
             username=request.form.get("username")).first()
 
+        if user.password is None:
+            return render_template('error_page.html', error="Авторизация через провайдера")
+
         if user is None or not user.check_password(request.form.get("password")):
             return render_template('login.html', form=form, error="Неверный логин или пароль")
         if not user.is_verified():
@@ -66,6 +71,54 @@ def login():
         return render_template('second_factor.html')
 
     return render_template("login.html", form=form)
+
+def reset_password_request():
+    form = ResetPasswordRequestForm(request.form)
+
+    if request.method == "GET":
+
+        return render_template("reset_password_request.html", form=form)
+
+    if request.method == "POST" and form.validate():
+
+        user = User.query.filter_by(
+            email=request.form.get("email")).first()
+
+        if user is None:
+            return render_template('error_page.html', error="Пользователь с таким email не найден")
+
+        token = generate_confirmation_token(user.email)
+        mail_service = services_provider.ServicesProvider.mail_service(mailto=user.email)
+        mail_service.send_a_letter('Перейдите по ссылке для сброса пароля: \n' +
+            CONFIG['APP_URL']+'/reset-password?token='+token)
+
+        return render_template('error_page.html', error="Перейдите по ссылке на email для сброса пароля")
+
+    return render_template('reset_password_request.html', form=form)
+
+def reset_password():
+    form = ResetPasswordForm(request.form)
+
+    if request.method == "GET":
+
+        return render_template("reset_password.html", form=form, token=request.args.get("token"))
+
+    if request.method == "POST" and form.validate():
+
+        email = confirm_token(request.form.get('token'), expiration=1800)
+
+        if email is not None:
+            user = User.query.filter_by(email=email).first()
+            user.set_password(request.form.get('password'))
+            db_session.add(user)
+            db_session.commit()
+            login_user(user)
+        else:
+            raise InvalidTokenException()
+        return render_template('error_page.html', error="Пароль успешно изменён")
+
+    return render_template('index.html')
+
 
 def second_factor(token):
     email = confirm_token(token, expiration=1800)
