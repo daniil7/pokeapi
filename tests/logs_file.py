@@ -16,7 +16,8 @@ class Test:
         if lines[1] != 'test line':
             return UnitTestResponse.ERROR, "log write: incorrect data"
 
-        Path.unlink(Path(LOGS_DIR) / "test/test_write_add")
+        if (Path(LOGS_DIR) / "test/test_write_add").exists():
+            Path.unlink(Path(LOGS_DIR) / "test/test_write_add")
 
         service = LogsFile('test/test_write_add')
         service.write_add("test line 1")
