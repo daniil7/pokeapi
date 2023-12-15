@@ -44,7 +44,7 @@ jobs:
       run: |
         mkdir webdrivers --parents
         wget -P webdrivers https://github.com/mozilla/geckodriver/releases/download/v0.33.0/geckodriver-v0.33.0-linux64.tar.gz
-        tar -xzvf webdrivers/geckodriver-v0.33.0-linux-aarch64.tar.gz -C webdrivers
+        tar -xzvf webdrivers/geckodriver-v0.33.0-linux64.tar.gz -C webdrivers
     - name: Setup env
       run: |
         cp .env.test .env
