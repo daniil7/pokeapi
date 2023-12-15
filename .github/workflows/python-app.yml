@@ -48,10 +48,10 @@ jobs:
     - name: Setup env
       run: |
         cp .env.test .env
-        cat .env
     - name: Test with pytest
       run: |
         poetry run python run.py < /dev/null > /dev/null 2>&1 &
         sleep 5
         poetry run python run_test.py
+        poetry run python run_test_ui.py
         kill -9 %1

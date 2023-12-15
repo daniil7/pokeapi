@@ -15,6 +15,7 @@ from tests import UnitTestResponse
 
 load_dotenv()
 
+exit_code = 0
 
 class bcolors:
     HEADER = '\033[95m'
@@ -56,6 +57,7 @@ def test_batch(browser, tests):
             print("Test " + test["name"] +
                   f" {bcolors.FAIL}FAILED WITH EXCEPTION{bcolors.ENDC}")
             print(str(e))
+            exit_code = 1
             continue
         if result == UnitTestResponse.SUCCESS:
             print("Test " + test["name"] +
@@ -64,13 +66,16 @@ def test_batch(browser, tests):
             print("Test " + test["name"] +
                   f" {bcolors.FAIL}FAILED WITH MESSAGE{bcolors.ENDC}")
             print(message)
+            exit_code = 2
         elif result == UnitTestResponse.WARNING:
             print("Test " + test["name"] +
                   f" {bcolors.WARNING}PASSED WITH WARNING{bcolors.ENDC}")
             print(message)
+            exit_code = 3
         else:
             print("Test " + test["name"] +
                   f" {bcolors.FAIL}UNDEFINED STATUS CODE{bcolors.ENDC}")
+            exit_code = 4
 
 
 def test_pokemons_list(browser):
@@ -184,3 +189,4 @@ if __name__ == "__main__":
     test_batch(browser, tests)
 
     browser.quit()
+    exit(exit_code)
