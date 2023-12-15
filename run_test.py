@@ -26,6 +26,8 @@ def find_modules(path):
 
 test_modules = find_modules(TESTS_DIR)
 
+exit_code = 0
+
 print()
 
 for module_name in test_modules:
@@ -38,15 +40,21 @@ for module_name in test_modules:
     except Exception as e:
         print("Test " + module_name + f" {bcolors['FAIL']}FAILED WITH EXCEPTION{bcolors['ENDC']}")
         print(str(e), '\n')
+        exit_code = 1
         continue
     if result == UnitTestResponse.SUCCESS:
         print("Test " + module_name + f" {bcolors['OKGREEN']}PASSED{bcolors['ENDC']}")
     elif result == UnitTestResponse.ERROR:
         print("Test " + module_name + f" {bcolors['FAIL']}FAILED WITH MESSAGE{bcolors['ENDC']}")
         print(message)
+        exit_code = 2
     elif result == UnitTestResponse.WARNING:
         print("Test " + module_name + f" {bcolors['WARNING']}PASSED WITH WARNING{bcolors['ENDC']}")
         print(message)
+        exit_code = 3
     else:
         print("Test " + module_name + f" {bcolors['FAIL']}UNDEFINED STATUS CODE{bcolors['ENDC']}")
+        exit_code = 4
     print()
+
+exit(exit_code)
