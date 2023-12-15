@@ -35,7 +35,11 @@ def open_firefox():
     options.add_argument('--disable-dev-shm-usage')
     options.add_argument("--headless")
 
-    service = Service(executable_path=os.environ.get("GECKODRIVER_PATH"))
+    geckodriver = os.environ.get("GECKODRIVER_PATH", None)
+    if geckodriver is not None:
+        service = Service(executable_path=geckodriver)
+    else:
+        service = Service()
     driver = webdriver.Firefox(options=options, service=service)
     driver.implicitly_wait(10)
 
